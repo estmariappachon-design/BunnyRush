@@ -5,7 +5,11 @@ public class ControladorConejo : MonoBehaviour
 {
     [Header("Configuración de Movimiento")]
     public float velocidadMovimiento = 7f;
-    public float fuerzaSalto = 15f;
+    public float fuerzaSalto = 22f; // Subimos la fuerza inicial para vencer la gravedad alta
+
+    [Header("Ajustes de Gravedad Acelerada")]
+    public float multiplicadorSubida = 1.8f; // Acelera la subida para que no sea flotante
+    public float multiplicadorCaida = 4.0f;  // Cae rápido y firme al suelo
 
     [Header("Límites de Pantalla")]
     public float limiteIzquierdo = -5f;
@@ -28,11 +32,13 @@ public class ControladorConejo : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Congelar rotación y movimiento en Z para que no se incline ni se mueva en profundidad
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
     }
 
     void Update()
     {
-        // Actualizar orientación según el movimiento táctil
         if (inputHorizontal > 0.05f)
         {
             mirandoDerecha = true;
@@ -44,20 +50,29 @@ public class ControladorConejo : MonoBehaviour
 
         ActualizarSprite();
 
-        // Restringir la posición X del conejo para que no se salga de pantalla
         float posicionXLimitada = Mathf.Clamp(transform.position.x, limiteIzquierdo, limiteDerecho);
         transform.position = new Vector3(posicionXLimitada, transform.position.y, transform.position.z);
     }
 
     void FixedUpdate()
     {
-        // Aplicar velocidad física lineal en el eje X
         rb.linearVelocity = new Vector3(inputHorizontal * velocidadMovimiento, rb.linearVelocity.y, 0f);
+
+        // --- SALTO SNAPPIER (SUBIDA Y CAÍDA RÁPIDAS) ---
+        if (rb.linearVelocity.y < 0)
+        {
+            // Cayendo: Gravedad fuerte para aterrizar rápido
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (multiplicadorCaida - 1) * Time.fixedDeltaTime;
+        }
+        else if (rb.linearVelocity.y > 0)
+        {
+            // Subiendo: Acelera la trayectoria ascendente sin flotar
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (multiplicadorSubida - 1) * Time.fixedDeltaTime;
+        }
     }
 
     void ActualizarSprite()
     {
-        // Estado: Aire / Salto
         if (!enSuelo)
         {
             if (mirandoDerecha)
@@ -69,7 +84,6 @@ public class ControladorConejo : MonoBehaviour
                 if (spriteSaltoIzq != null) spriteRenderer.sprite = spriteSaltoIzq;
             }
         }
-        // Estado: Suelo en movimiento
         else if (inputHorizontal > 0.05f)
         {
             if (spriteCaminarDer != null) spriteRenderer.sprite = spriteCaminarDer;
@@ -78,14 +92,12 @@ public class ControladorConejo : MonoBehaviour
         {
             if (spriteCaminarIzq != null) spriteRenderer.sprite = spriteCaminarIzq;
         }
-        // Estado: Reposo (Idle)
         else
         {
             if (spriteNormal != null) spriteRenderer.sprite = spriteNormal;
         }
     }
 
-    // Detección física directa con el suelo
     private void OnCollisionEnter(Collision collision)
     {
         enSuelo = true;
@@ -96,7 +108,6 @@ public class ControladorConejo : MonoBehaviour
         enSuelo = false;
     }
 
-    // Métodos llamados por el script BotonControlTactil de la UI
     public void MoverHorizontal(float valor)
     {
         inputHorizontal = valor;
@@ -106,6 +117,7 @@ public class ControladorConejo : MonoBehaviour
     {
         if (enSuelo)
         {
+            // Limpia la velocidad vertical antes de impulsar
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, 0f);
             rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         }

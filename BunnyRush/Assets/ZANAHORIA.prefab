@@ -155,5 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjetoRecolectable
   tipo: 0
-  puntos: 10
+  puntos: 8
+  cargaPowerUp: 25
   tiempoVida: 6

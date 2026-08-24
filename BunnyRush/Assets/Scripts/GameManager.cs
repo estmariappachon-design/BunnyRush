@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     {
         enPausa = !enPausa;
         if (panelPausa != null) panelPausa.SetActive(enPausa);
-        Time.timeScale = enPausa ? 0f : 1f;
+        Time.timeScale = enPausa ? 0f : 1f; // Pausa o reanuda el tiempo y las físicas
     }
 
     public void Derrota()
@@ -42,7 +42,25 @@ public class GameManager : MonoBehaviour
     public void Victoria()
     {
         if (panelVictoria != null) panelVictoria.SetActive(true);
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; // Congela la escena al mostrar la imagen de completado
+    }
+
+    // Lógica para el botón "Siguiente Nivel" dentro del panel de Victoria
+    public void SiguienteNivel()
+    {
+        Time.timeScale = 1f; // Reactiva la velocidad del tiempo
+        int indiceActual = SceneManager.GetActiveScene().buildIndex;
+        int totalEscenas = SceneManager.sceneCountInBuildSettings;
+
+        if (indiceActual + 1 < totalEscenas)
+        {
+            SceneManager.LoadScene(indiceActual + 1);
+        }
+        else
+        {
+            // Si es el último nivel, puedes mandar al menú principal o reiniciar
+            SceneManager.LoadScene(0);
+        }
     }
 
     public void ReiniciarNivel()
