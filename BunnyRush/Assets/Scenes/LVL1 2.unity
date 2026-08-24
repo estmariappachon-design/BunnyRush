@@ -1529,7 +1529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 131, y: 29}
+  m_AnchoredPosition: {x: 131, y: 66}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &640554342
@@ -1861,7 +1861,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 8.498383}
+  m_AnchoredPosition: {x: 20.5, y: 8.498383}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &756788605
@@ -1998,7 +1998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -8.964054}
+  m_AnchoredPosition: {x: 22.1, y: -8.964054}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &922671711
@@ -2131,14 +2131,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnerObjetos
   transformConejo: {fileID: 1222315626}
-  prefabZanahoria: {fileID: 2185104546415599565, guid: ccb578a86631da9488151b774086ee6a, type: 3}
-  prefabZanahoriaDorada: {fileID: 9140664984983694375, guid: f11cc8fc788b9a845ae915339edccdd8, type: 3}
+  prefabZanahoria: {fileID: 9140664984983694375, guid: f11cc8fc788b9a845ae915339edccdd8, type: 3}
+  prefabZanahoriaDorada: {fileID: 2185104546415599565, guid: ccb578a86631da9488151b774086ee6a, type: 3}
   prefabPowerUpItem: {fileID: 7960462264571385344, guid: 02e60f742110c71478434d8ca5b2bab1, type: 3}
   prefabPiedra: {fileID: 1888238432853594187, guid: f442d071cbdbfc94bbb2e6244edcfb2b, type: 3}
-  limiteIzquierdo: -10
-  limiteDerecho: 10
+  limiteIzquierdo: -11
+  limiteDerecho: 11
   alturaY: 30
-  tiempoEntreCaidas: 0.9
+  maximoPowerUps: 1
 --- !u!4 &937453795
 Transform:
   m_ObjectHideFlags: 0
@@ -4256,9 +4256,9 @@ MonoBehaviour:
   sprite1Corazon: {fileID: 21300000, guid: 06e87d039af11104bb1886bf8adfce6c, type: 3}
   barraPowerUp: {fileID: 0}
   botonPowerUp: {fileID: 0}
-  duracionLluvia: 4
-  tiempoTotal: 50
-  metaPuntuacion: 150
+  duracionLluvia: 0.2
+  tiempoTotal: 80
+  metaPuntuacion: 300
 --- !u!4 &1554141503
 Transform:
   m_ObjectHideFlags: 0
@@ -4300,8 +4300,8 @@ Transform:
   m_GameObject: {fileID: 1614339595}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21, y: -2, z: 8}
-  m_LocalScale: {x: 123.54735, y: 188.92711, z: 96.50628}
+  m_LocalPosition: {x: -3, y: -2, z: 8}
+  m_LocalScale: {x: 153.21107, y: 188.92711, z: 96.50628}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1175146567}

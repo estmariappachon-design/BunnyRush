@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnerObjetos : MonoBehaviour
 {
@@ -17,15 +18,22 @@ public class SpawnerObjetos : MonoBehaviour
     public float limiteDerecho = 4f;
     public float alturaY = 6f;
 
-    [Header("Frecuencia de Caída")]
-    public float tiempoEntreCaidas = 1.2f;
-
     [Header("Control de Power-Ups")]
-    public int maximoPowerUps = 2; // <--- AQUÍ PUEDES CAMBIAR EL LÍMITE (Por defecto 2)
-    private int powerUpsGenerados = 0; // Lleva la cuenta de cuántos han caído
+    public int maximoPowerUps = 2;
+    private int powerUpsGenerados = 0;
+
+    // Variables internas que variarán según el Nivel
+    private float tiempoEntreCaidas = 1.2f;
+    private float probabilidadPiedra = 0.15f;
+    private float velocidadCaida = 3f; // <--- VELOCIDAD DE CAÍDA POR DEFECTO
 
     private float cronometro = 0f;
     private bool enLluviaPositiva = false;
+
+    void Start()
+    {
+        ConfigurarDificultadSegunNivel();
+    }
 
     void Update()
     {
@@ -38,13 +46,44 @@ public class SpawnerObjetos : MonoBehaviour
         }
     }
 
+    void ConfigurarDificultadSegunNivel()
+    {
+        int indiceEscena = SceneManager.GetActiveScene().buildIndex;
+
+        // Configuración por Escena / Nivel
+        switch (indiceEscena)
+        {
+            case 0: // NIVEL 1
+                tiempoEntreCaidas = 1.2f;
+                probabilidadPiedra = 0.15f;
+                velocidadCaida = 3f; // <--- Caen lento
+                break;
+
+            case 1: // NIVEL 2
+                tiempoEntreCaidas = 0.9f;
+                probabilidadPiedra = 0.30f;
+                velocidadCaida = 6f; // <--- Caen el DOBLE de rápido
+                break;
+
+            case 2: // NIVEL 3
+                tiempoEntreCaidas = 0.6f;
+                probabilidadPiedra = 0.45f;
+                velocidadCaida = 10f; // <--- Caen SÚPER rápido
+                break;
+
+            default:
+                velocidadCaida = 5f;
+                break;
+        }
+    }
+
     void GenerarObjeto()
     {
         GameObject objetoAElegir;
 
         if (enLluviaPositiva)
         {
-            objetoAElegir = (Random.value > 0.4f) ? prefabZanahoria : prefabZanahoriaDorada;
+            objetoAElegir = prefabZanahoriaDorada;
         }
         else
         {
@@ -53,7 +92,6 @@ public class SpawnerObjetos : MonoBehaviour
 
         if (objetoAElegir != null)
         {
-            // Si el objeto elegido fue un PowerUp, sumamos 1 al contador
             if (objetoAElegir == prefabPowerUpItem)
             {
                 powerUpsGenerados++;
@@ -63,7 +101,27 @@ public class SpawnerObjetos : MonoBehaviour
             float zPunto = (transformConejo != null) ? transformConejo.position.z : transform.position.z;
 
             Vector3 posicionGeneracion = new Vector3(posicionX, alturaY, zPunto);
-            Instantiate(objetoAElegir, posicionGeneracion, Quaternion.identity);
+
+            // 1. Instanciar el objeto
+            GameObject objetoCreado = Instantiate(objetoAElegir, posicionGeneracion, Quaternion.identity);
+
+            // 2. Aplicar la velocidad de caída según el Nivel usando Rigidbody
+
+            // Si tu proyecto usa Rigidbody 3D:
+            Rigidbody rb3D = objetoCreado.GetComponent<Rigidbody>();
+            if (rb3D != null)
+            {
+                rb3D.linearVelocity = new Vector3(0, -velocidadCaida, 0);
+            }
+
+            // Si tu proyecto usa Rigidbody 2D (Descomenta estas líneas si es 2D):
+            /*
+            Rigidbody2D rb2D = objetoCreado.GetComponent<Rigidbody2D>();
+            if (rb2D != null)
+            {
+                rb2D.linearVelocity = new Vector2(0, -velocidadCaida);
+            }
+            */
         }
     }
 
@@ -71,29 +129,30 @@ public class SpawnerObjetos : MonoBehaviour
     {
         float probabilidad = Random.value;
 
-        // Si ya se generaron los 2 Power-Ups del nivel, redirigimos la probabilidad a una Zanahoria común
-        if (probabilidad < 0.15f)
+        if (probabilidad < probabilidadPiedra)
+        {
+            return prefabPiedra;
+        }
+
+        if (probabilidad < (probabilidadPiedra + 0.10f))
         {
             if (powerUpsGenerados < maximoPowerUps)
             {
-                return prefabPowerUpItem; // Solo sale si la cuenta es menor a 2
+                return prefabPowerUpItem;
             }
             else
             {
-                return prefabZanahoria; // Si ya salieron 2, sale una zanahoria normal
+                return prefabZanahoria;
             }
         }
-        else if (probabilidad < 0.60f)
+
+        if (Random.value > 0.4f)
         {
             return prefabZanahoria;
         }
-        else if (probabilidad < 0.80f)
-        {
-            return prefabZanahoriaDorada;
-        }
         else
         {
-            return prefabPiedra;
+            return prefabZanahoriaDorada;
         }
     }
 
@@ -107,7 +166,7 @@ public class SpawnerObjetos : MonoBehaviour
         enLluviaPositiva = true;
         float tiempoOriginal = tiempoEntreCaidas;
 
-        tiempoEntreCaidas = 0.3f;
+        tiempoEntreCaidas = 0.25f;
 
         yield return new WaitForSeconds(duracion);
 

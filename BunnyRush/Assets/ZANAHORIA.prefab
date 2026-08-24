@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 627b0056b7a15e04b83e9ca9d740d19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjetoRecolectable
-  tipo: 0
+  tipo: 1
   puntos: 8
-  cargaPowerUp: 25
   tiempoVida: 6
+  duracionLluviaDorada: 5

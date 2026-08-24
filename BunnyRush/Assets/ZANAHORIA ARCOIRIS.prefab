@@ -156,5 +156,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjetoRecolectable
   tipo: 3
   puntos: 15
-  cargaPowerUp: 25
   tiempoVida: 6
+  duracionLluviaDorada: 2

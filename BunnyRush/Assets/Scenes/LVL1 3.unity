@@ -1858,7 +1858,7 @@ Transform:
   m_GameObject: {fileID: 783161631}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 110.49099, y: 6.9056854, z: 11}
+  m_LocalPosition: {x: -51, y: 6.9056854, z: 11}
   m_LocalScale: {x: 147.69652, y: 189.92296, z: 147.69652}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1953,14 +1953,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnerObjetos
   transformConejo: {fileID: 1222315626}
-  prefabZanahoria: {fileID: 2185104546415599565, guid: ccb578a86631da9488151b774086ee6a, type: 3}
-  prefabZanahoriaDorada: {fileID: 9140664984983694375, guid: f11cc8fc788b9a845ae915339edccdd8, type: 3}
-  prefabEstrellaBonus: {fileID: 690128617921228648, guid: 0f16f72f392d5a9418d17f67bc25f0f8, type: 3}
+  prefabZanahoria: {fileID: 9140664984983694375, guid: f11cc8fc788b9a845ae915339edccdd8, type: 3}
+  prefabZanahoriaDorada: {fileID: 2185104546415599565, guid: ccb578a86631da9488151b774086ee6a, type: 3}
+  prefabPowerUpItem: {fileID: 7960462264571385344, guid: 02e60f742110c71478434d8ca5b2bab1, type: 3}
   prefabPiedra: {fileID: 1888238432853594187, guid: f442d071cbdbfc94bbb2e6244edcfb2b, type: 3}
   limiteIzquierdo: -10
   limiteDerecho: 10
   alturaY: 30
-  tiempoEntreCaidas: 0.5
+  maximoPowerUps: 1
 --- !u!4 &937453795
 Transform:
   m_ObjectHideFlags: 0
@@ -4077,8 +4077,9 @@ MonoBehaviour:
   sprite1Corazon: {fileID: 21300000, guid: 06e87d039af11104bb1886bf8adfce6c, type: 3}
   barraPowerUp: {fileID: 0}
   botonPowerUp: {fileID: 0}
-  tiempoTotal: 40
-  metaPuntuacion: 200
+  duracionLluvia: 1
+  tiempoTotal: 100
+  metaPuntuacion: 500
 --- !u!4 &1554141503
 Transform:
   m_ObjectHideFlags: 0
