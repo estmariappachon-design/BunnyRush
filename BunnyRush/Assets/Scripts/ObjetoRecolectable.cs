@@ -2,18 +2,13 @@ using UnityEngine;
 
 public class ObjetoRecolectable : MonoBehaviour
 {
-    public enum TipoObjeto { Zanahoria, ZanahoriaDorada, Piedra, PowerUpItem }
+    // 1. Agregamos ZanahoriaPodrida al Enum
+    public enum TipoObjeto { Zanahoria, ZanahoriaDorada, Piedra, PowerUpItem, ZanahoriaPodrida }
 
     [Header("Configuración del Objeto")]
     public TipoObjeto tipo;
     public int puntos = 10;
-    public float tiempoVida = 6f;
     public float duracionLluviaDorada = 5f;
-
-    void Start()
-    {
-        Destroy(gameObject, tiempoVida);
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -39,8 +34,8 @@ public class ObjetoRecolectable : MonoBehaviour
                         hud.AgregarPuntos(puntos);
                         if (AudioManager.Instance != null)
                         {
-                            AudioManager.Instance.PlayPowerUp(); // Sonidito instantáneo al recoger
-                            AudioManager.Instance.ActivarMusicaPowerUp(duracionLluviaDorada); // Cambia la música por la duración de la lluvia
+                            AudioManager.Instance.PlayPowerUp();
+                            AudioManager.Instance.ActivarMusicaPowerUp(duracionLluviaDorada);
                         }
 
                         SpawnerObjetos spawner = GameObject.FindAnyObjectByType<SpawnerObjetos>();
@@ -49,7 +44,15 @@ public class ObjetoRecolectable : MonoBehaviour
                             spawner.ActivarLluviaPositiva(duracionLluviaDorada);
                         }
                         break;
+
                     case TipoObjeto.Piedra:
+                        hud.RestarVida();
+                        hud.AgregarPuntos(-puntos);
+                        if (AudioManager.Instance != null) AudioManager.Instance.PlayObjetoMalo();
+                        break;
+
+                    // 2. Nuevo caso para la Zanahoria Podrida (descuenta puntos y resta vida)
+                    case TipoObjeto.ZanahoriaPodrida:
                         hud.RestarVida();
                         hud.AgregarPuntos(-puntos);
                         if (AudioManager.Instance != null) AudioManager.Instance.PlayObjetoMalo();
@@ -58,6 +61,38 @@ public class ObjetoRecolectable : MonoBehaviour
             }
 
             Destroy(gameObject);
+        }
+        else if (other.CompareTag("Suelo") || other.name.Equals("PisoDestructor") || other.name.Equals("Suelo"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public static void CambiarVisibilidadObjetos(bool visible)
+    {
+        ObjetoRecolectable[] objetos = GameObject.FindObjectsByType<ObjetoRecolectable>(FindObjectsInactive.Exclude);
+        foreach (ObjetoRecolectable obj in objetos)
+        {
+            if (obj != null)
+            {
+                Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+                foreach (Renderer r in renderers)
+                {
+                    r.enabled = visible;
+                }
+            }
+        }
+    }
+
+    public static void LimpiarObjetosEnPantalla()
+    {
+        ObjetoRecolectable[] objetos = GameObject.FindObjectsByType<ObjetoRecolectable>(FindObjectsInactive.Exclude);
+        foreach (ObjetoRecolectable obj in objetos)
+        {
+            if (obj != null)
+            {
+                Destroy(obj.gameObject);
+            }
         }
     }
 }

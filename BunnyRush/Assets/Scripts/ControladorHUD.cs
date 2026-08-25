@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// La clase DEBE empezar con public class y sus llaves { }
 public class ControladorHUD : MonoBehaviour
 {
     [Header("UI Textos y Vidas")]
@@ -29,9 +28,8 @@ public class ControladorHUD : MonoBehaviour
 
     [Header("Configuración del Juego")]
     public float tiempoTotal = 60f;
-    public int metaPuntuacion = 100;
+    public int metaPuntuacion = 100; // Define 100, 300 o 500 según el nivel en el Inspector
 
-    // AQUÍ ES DONDE SÍ ES VÁLIDO USAR private (Dentro de las llaves de la clase)
     private int puntajeActual = 0;
     private int vidasActuales = 3;
     private float tiempoRestante;
@@ -54,14 +52,12 @@ public class ControladorHUD : MonoBehaviour
         if (tiempoRestante > 0)
         {
             tiempoRestante -= Time.deltaTime;
-            if (textoTiempo != null)
-            {
-                textoTiempo.text = Mathf.CeilToInt(tiempoRestante).ToString();
-            }
+            ActualizarTextoTiempo();
         }
         else
         {
             tiempoRestante = 0;
+            ActualizarTextoTiempo();
             ProcesarDerrota();
         }
     }
@@ -96,11 +92,12 @@ public class ControladorHUD : MonoBehaviour
     {
         juegoActivo = false;
 
+        // Muestra el puntaje conseguido vs la meta del nivel en la pantalla final
         if (textoPuntajeVictoria != null)
-            textoPuntajeVictoria.text = puntajeActual.ToString();
+            textoPuntajeVictoria.text = puntajeActual.ToString() + "/" + metaPuntuacion.ToString();
 
         if (textoTiempoVictoria != null)
-            textoTiempoVictoria.text = Mathf.CeilToInt(tiempoRestante).ToString();
+            textoTiempoVictoria.text = FormatearTiempo(tiempoTotal - tiempoRestante);
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayVictoria();
@@ -115,11 +112,12 @@ public class ControladorHUD : MonoBehaviour
     {
         juegoActivo = false;
 
+        // Muestra el puntaje conseguido vs la meta del nivel en la pantalla de Game Over
         if (textoPuntajeGameOver != null)
-            textoPuntajeGameOver.text = puntajeActual.ToString();
+            textoPuntajeGameOver.text = puntajeActual.ToString() + "/" + metaPuntuacion.ToString();
 
         if (textoTiempoGameOver != null)
-            textoTiempoGameOver.text = Mathf.CeilToInt(tiempoRestante).ToString();
+            textoTiempoGameOver.text = FormatearTiempo(tiempoTotal - tiempoRestante);
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayDerrota();
@@ -147,11 +145,27 @@ public class ControladorHUD : MonoBehaviour
         }
     }
 
+    private void ActualizarTextoTiempo()
+    {
+        if (textoTiempo != null)
+        {
+            textoTiempo.text = FormatearTiempo(tiempoRestante);
+        }
+    }
+
+    private string FormatearTiempo(float tiempoEnSegundos)
+    {
+        int minutos = Mathf.FloorToInt(tiempoEnSegundos / 60f);
+        int segundos = Mathf.FloorToInt(tiempoEnSegundos % 60f);
+        return string.Format("{0:00}:{1:00} s.", minutos, segundos);
+    }
+
     void ActualizarUI()
     {
+        // Formato para el marcador principal en pantalla: 0/100, 0/300 o 0/500
         if (textoPuntaje != null)
         {
-            textoPuntaje.text = puntajeActual.ToString();
+            textoPuntaje.text = puntajeActual.ToString() + "/" + metaPuntuacion.ToString();
         }
 
         if (displayCorazones != null)

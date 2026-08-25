@@ -12,6 +12,7 @@ public class SpawnerObjetos : MonoBehaviour
     public GameObject prefabZanahoriaDorada;
     public GameObject prefabPowerUpItem;
     public GameObject prefabPiedra;
+    public GameObject prefabZanahoriaPodrida;
 
     [Header("Límites de Generación (Eje X)")]
     public float limiteIzquierdo = -4f;
@@ -25,7 +26,8 @@ public class SpawnerObjetos : MonoBehaviour
     // Variables internas que variarán según el Nivel
     private float tiempoEntreCaidas = 1.2f;
     private float probabilidadPiedra = 0.15f;
-    private float velocidadCaida = 3f; // <--- VELOCIDAD DE CAÍDA POR DEFECTO
+    private float probabilidadZanahoriaPodrida = 0f;
+    private float velocidadCaida = 3f;
 
     private float cronometro = 0f;
     private bool enLluviaPositiva = false;
@@ -55,20 +57,23 @@ public class SpawnerObjetos : MonoBehaviour
         {
             case 0: // NIVEL 1
                 tiempoEntreCaidas = 1.2f;
-                probabilidadPiedra = 0.15f;
-                velocidadCaida = 3f; // <--- Caen lento
+                probabilidadPiedra = 0.25f;
+                probabilidadZanahoriaPodrida = 0f; // <--- CERO en el Nivel 1
+                velocidadCaida = 3f;
                 break;
 
             case 1: // NIVEL 2
                 tiempoEntreCaidas = 0.9f;
-                probabilidadPiedra = 0.30f;
-                velocidadCaida = 6f; // <--- Caen el DOBLE de rápido
+                probabilidadPiedra = 0.25f;
+                probabilidadZanahoriaPodrida = 0.15f; // <--- Comienzan a salir aquí
+                velocidadCaida = 6f;
                 break;
 
             case 2: // NIVEL 3
                 tiempoEntreCaidas = 0.6f;
-                probabilidadPiedra = 0.45f;
-                velocidadCaida = 10f; // <--- Caen SÚPER rápido
+                probabilidadPiedra = 0.20f;
+                probabilidadZanahoriaPodrida = 0.10f;
+                velocidadCaida = 9f;
                 break;
 
             default:
@@ -102,26 +107,13 @@ public class SpawnerObjetos : MonoBehaviour
 
             Vector3 posicionGeneracion = new Vector3(posicionX, alturaY, zPunto);
 
-            // 1. Instanciar el objeto
             GameObject objetoCreado = Instantiate(objetoAElegir, posicionGeneracion, Quaternion.identity);
 
-            // 2. Aplicar la velocidad de caída según el Nivel usando Rigidbody
-
-            // Si tu proyecto usa Rigidbody 3D:
             Rigidbody rb3D = objetoCreado.GetComponent<Rigidbody>();
             if (rb3D != null)
             {
                 rb3D.linearVelocity = new Vector3(0, -velocidadCaida, 0);
             }
-
-            // Si tu proyecto usa Rigidbody 2D (Descomenta estas líneas si es 2D):
-            /*
-            Rigidbody2D rb2D = objetoCreado.GetComponent<Rigidbody2D>();
-            if (rb2D != null)
-            {
-                rb2D.linearVelocity = new Vector2(0, -velocidadCaida);
-            }
-            */
         }
     }
 
@@ -129,12 +121,20 @@ public class SpawnerObjetos : MonoBehaviour
     {
         float probabilidad = Random.value;
 
+        // 1. Evalúa si cae Piedra
         if (probabilidad < probabilidadPiedra)
         {
             return prefabPiedra;
         }
 
-        if (probabilidad < (probabilidadPiedra + 0.10f))
+        // 2. Evalúa si cae Zanahoria Podrida (si la probabilidad es 0, omitirá este bloque)
+        if (probabilidadZanahoriaPodrida > 0f && probabilidad < (probabilidadPiedra + probabilidadZanahoriaPodrida))
+        {
+            return prefabZanahoriaPodrida != null ? prefabZanahoriaPodrida : prefabPiedra;
+        }
+
+        // 3. Evalúa si cae PowerUp
+        if (probabilidad < (probabilidadPiedra + probabilidadZanahoriaPodrida + 0.10f))
         {
             if (powerUpsGenerados < maximoPowerUps)
             {
@@ -146,6 +146,7 @@ public class SpawnerObjetos : MonoBehaviour
             }
         }
 
+        // 4. Objetos normales y especiales de premio
         if (Random.value > 0.4f)
         {
             return prefabZanahoria;

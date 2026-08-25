@@ -1,0 +1,10 @@
+# ninja log v5
+44	2481	8093316956347047	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	10a5b304d33fedca
+30	2494	8093316956458226	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	bd1c20d586d40566
+0	2504	8093316956562581	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	9b8268130dd8c140
+91	2509	8093316956665312	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9b348b42a549d3d6
+19	2580	8093316957241648	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	e6b11819e290b3f8
+75	2792	8093316959392166	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	20f4563929d8a840
+61	2794	8093316959392166	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	2c902ff369e4d843
+11	2905	8093316960574710	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	48921371a773868b
+2905	3135	8093316962858442	C:/Users/EQTMCS-1353/Documents/INFO_CAMILA/Universidad/MATERIAS/VIDEOJUEGOS/BunnyRush/BunnyRush/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3a286r5u/obj/arm64-v8a/libgame.so	a805507093d07c49
